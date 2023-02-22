@@ -14,7 +14,7 @@ class MorseLangViewModel : ViewModel() {
 
     fun stateOnceAndStream(): LiveData<UiState> = uiState
 
-    data class UiState(val MorseTranslationList: List<MorseTranslation>)
+    data class UiState(val MorseItemList: List<MorseItem>)
 
     class Factory(): ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -3,4 +3,5 @@
 
     <string name="button_save">Salvar</string>
     <string name="hint_digit">Digite o texto aqui</string>
+    <string name="text_to_morse">Texto convertido para Codigo Morse</string>
 </resources>

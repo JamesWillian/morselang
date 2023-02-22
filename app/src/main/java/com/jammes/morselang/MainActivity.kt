@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import com.jammes.morselang.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -17,24 +18,56 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        supportActionBar!!.hide()
+        binding.clearTxt.visibility = View.INVISIBLE
+        binding.copyMorse.visibility = View.INVISIBLE
+        binding.saveMorse.visibility = View.INVISIBLE
+
+        binding.clearTxt.setOnClickListener {
+            binding.editTextText.text.clear()
+        }
 
         binding.editTextText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
+            /**
+             *
+             * Apos o texto ser alterado, chama a funcao para converter o texto para morse
+             *
+             */
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                showMorse()
+
+                val txt = s.toString().uppercase().trim()
+
+                binding.editTextMorse.setText(convertToMorse( txt ))
+
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            /**
+             *
+             * Controla a visibilidade dos icones de Limpar Texto, Copiar e Salvar
+             *
+             */
+            override fun afterTextChanged(s: Editable?) {
+
+                if (binding.editTextText.text.toString() == "") {
+                    binding.clearTxt.visibility = View.INVISIBLE
+                } else {
+                    binding.clearTxt.visibility = View.VISIBLE
+                }
+
+                if (binding.editTextMorse.text.toString() == "") {
+                    binding.copyMorse.visibility = View.INVISIBLE
+                    binding.saveMorse.visibility = View.INVISIBLE
+                } else {
+                    binding.copyMorse.visibility = View.VISIBLE
+                    binding.saveMorse.visibility = View.VISIBLE
+                }
+            }
         })
     }
 
-    private fun showMorse() {
-        binding.editTextMorse.setText(convertToMorse( binding.editTextText.text.toString().uppercase().trim() ))
-    }
-
     private fun convertToMorse(userText: String): String {
+
         var codeMorse = ""
 
         for (key in userText){
