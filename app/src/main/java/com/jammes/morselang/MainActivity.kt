@@ -1,13 +1,22 @@
 package com.jammes.morselang
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
 import com.jammes.morselang.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel: MorseLangViewModel by viewModels {
+        MorseLangViewModel.Factory()
+    }
 
     private lateinit var binding: ActivityMainBinding
 
@@ -18,15 +27,34 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        binding.clearTxt.visibility = View.INVISIBLE
-        binding.copyMorse.visibility = View.INVISIBLE
-        binding.saveMorse.visibility = View.INVISIBLE
+        val textEditText = binding.editTextText
+        val morseEditText = binding.editTextMorse
 
-        binding.clearTxt.setOnClickListener {
-            binding.editTextText.text.clear()
+        binding.card.visibility = View.GONE
+        binding.copyMorse.visibility = View.GONE
+
+        binding.fab.setOnClickListener {
+            if (binding.card.visibility == View.GONE) {
+                binding.card.visibility = View.VISIBLE
+            } else {
+                binding.card.visibility = View.GONE
+            }
         }
 
-        binding.editTextText.addTextChangedListener(object : TextWatcher {
+        binding.copyMorse.setOnClickListener {
+
+            val text = morseEditText.text.toString()
+
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("morsetxt", text)
+
+            clipboard.setPrimaryClip(clip)
+
+            Toast.makeText(this, "Morse copiado com sucesso!", Toast.LENGTH_SHORT).show()
+
+        }
+
+        textEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             /**
@@ -38,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
                 val txt = s.toString().uppercase().trim()
 
-                binding.editTextMorse.setText(convertToMorse( txt ))
+                binding.editTextMorse.setText(viewModel.convertToMorse( txt ))
 
             }
 
@@ -49,84 +77,13 @@ class MainActivity : AppCompatActivity() {
              */
             override fun afterTextChanged(s: Editable?) {
 
-                if (binding.editTextText.text.toString() == "") {
-                    binding.clearTxt.visibility = View.INVISIBLE
-                } else {
-                    binding.clearTxt.visibility = View.VISIBLE
-                }
-
                 if (binding.editTextMorse.text.toString() == "") {
-                    binding.copyMorse.visibility = View.INVISIBLE
-                    binding.saveMorse.visibility = View.INVISIBLE
+                    binding.copyMorse.visibility = View.GONE
                 } else {
                     binding.copyMorse.visibility = View.VISIBLE
-                    binding.saveMorse.visibility = View.VISIBLE
                 }
             }
         })
     }
-
-    private fun convertToMorse(userText: String): String {
-
-        var codeMorse = ""
-
-        for (key in userText){
-            val morseWord = alphabetMorse[key.toString()] ?: ""
-            codeMorse += "$morseWord "
-        }
-
-        return codeMorse.trim()
-    }
-
-    private val alphabetMorse = mapOf<String, String>(
-        "A" to ".-",
-        "B" to "-...",
-        "C" to "-.-.",
-        "D" to "-..",
-        "E" to ".",
-        "F" to "..-.",
-        "G" to "--.",
-        "H" to "....",
-        "I" to "..",
-        "J" to ".---",
-        "K" to "-.-",
-        "L" to ".-..",
-        "M" to "--",
-        "N" to "-.",
-        "O" to "---",
-        "P" to ".--.",
-        "Q" to "--.-",
-        "R" to ".-.",
-        "S" to "...",
-        "T" to "-",
-        "U" to "..-",
-        "V" to "...-",
-        "W" to ".--",
-        "X" to "-..-",
-        "Y" to "-.--",
-        "Z" to "--..",
-        " " to "/",
-        "0" to "-----",
-        "1" to ".----",
-        "2" to "..---",
-        "3" to "...--",
-        "4" to "....-",
-        "5" to ".....",
-        "6" to "-....",
-        "7" to "--...",
-        "8" to "---..",
-        "9" to "----.",
-        "." to ".-.-.-",
-        "," to "--..--",
-        "?" to "..--..",
-        "!" to "..--.",
-        ":" to "---...",
-        "'" to ".---.",
-        "=" to "-...-",
-        "(" to "-.--.",
-        ")" to "-.--.-",
-        "/" to "-..-.",
-    )
-
 
 }

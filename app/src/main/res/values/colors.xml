@@ -10,4 +10,6 @@
     <color name="light">#EFEFEF</color>
     <color name="dark_blue">#0A1931</color>
     <color name="font_color">#3F51B5</color>
+    <color name="edit_color">#F6EBC7</color>
+
 </resources>
