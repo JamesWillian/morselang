@@ -27,4 +27,6 @@
         </activity>
     </application>
 
+    <uses-permission android:name="android.permission.CLIPBOARD_WRITE" />
+
 </manifest>
