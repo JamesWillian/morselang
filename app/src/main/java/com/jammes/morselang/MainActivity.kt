@@ -11,11 +11,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.jammes.morselang.databinding.ActivityMainBinding
+import com.jammes.morselang.dummy.MockMorse
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MorseLangViewModel by viewModels {
-        MorseLangViewModel.Factory()
+        MorseLangViewModel.Factory(MockMorse)
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -34,10 +35,12 @@ class MainActivity : AppCompatActivity() {
         binding.copyMorse.visibility = View.GONE
 
         binding.fab.setOnClickListener {
+
             if (binding.card.visibility == View.GONE) {
                 binding.card.visibility = View.VISIBLE
             } else {
-                binding.card.visibility = View.GONE
+                if (morseEditText.text.toString() == "") binding.card.visibility = View.GONE
+                else onSave()
             }
         }
 
@@ -84,6 +87,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun onSave() {
+        val text = binding.editTextText.text.toString()
+        val morse = binding.editTextMorse.text.toString()
+
+        viewModel.saveMorse(text, morse)
     }
 
 }

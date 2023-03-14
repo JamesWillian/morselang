@@ -2,5 +2,5 @@
     <string name="app_name">MorseLang</string>
 
     <string name="hint_text">Seu Texto</string>
-    <string name="hint_morse">Morse</string>
+    <string name="hint_morse">Código Morse</string>
 </resources>

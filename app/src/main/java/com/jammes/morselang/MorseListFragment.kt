@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jammes.morselang.core.MorseRepository
 import com.jammes.morselang.databinding.FragmentMorseListBinding
 import com.jammes.morselang.dummy.MockMorse
 
@@ -17,6 +19,10 @@ class MorseListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: MorseListAdapter
+
+    private val viewModel: MorseLangViewModel by activityViewModels {
+        MorseLangViewModel.Factory(MockMorse)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +43,14 @@ class MorseListFragment : Fragment() {
         binding.morseRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.morseRecyclerView.adapter = adapter
 
-        adapter.updateMorseList(MockMorse.randomMorseList)
+        viewModel.stateOnceAndStream().observe(viewLifecycleOwner) {
+            bindUiState(it)
+        }
+
+    }
+
+    private fun bindUiState(uiState: MorseLangViewModel.UiState) {
+        adapter.updateMorseList(uiState.morseItemList)
     }
 
     override fun onDestroy() {

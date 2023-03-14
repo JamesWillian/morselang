@@ -1,9 +1,11 @@
 package com.jammes.morselang.dummy
 
 import com.jammes.morselang.MorseItem
+import com.jammes.morselang.core.MorseRepository
 import java.util.UUID
 
-object MockMorse {
+object MockMorse: MorseRepository {
+
     val randomMorseList = listOf(
         MorseItem(
             id = UUID.randomUUID().toString(),
@@ -41,4 +43,14 @@ object MockMorse {
             morse = "-- .- -.- . / .- / -.-. ..- .--. / --- ..-. / -.-. --- ..-. ..-. . ."
         )
     )
+
+    private val morseItemList: MutableList<MorseItem> = mutableListOf()
+
+    override fun fetchMorseList() = morseItemList.map { it.copy() }
+
+    override fun saveMorse(text: String, morse: String) {
+        morseItemList.add(
+            MorseItem(id = UUID.randomUUID().toString(), text = text, morse = morse)
+        )
+    }
 }
