@@ -10,13 +10,15 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.jammes.morselang.core.database.AppDatabase
 import com.jammes.morselang.databinding.ActivityMainBinding
 import com.jammes.morselang.core.repository.MorseRepositoryImpl
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MorseLangViewModel by viewModels {
-        MorseLangViewModel.Factory(MorseRepositoryImpl())
+        val db = AppDatabase.getInstance(applicationContext)
+        MorseLangViewModel.Factory(MorseRepositoryImpl(db))
     }
 
     private lateinit var binding: ActivityMainBinding

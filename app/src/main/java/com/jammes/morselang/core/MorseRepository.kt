@@ -7,5 +7,5 @@ interface MorseRepository {
 
     suspend fun fetchMorseList(): List<MorseDomain>
 
-    suspend fun saveMorse(morse: MorseDomain)
+    suspend fun saveMorse(text: String, morse: String)
 }

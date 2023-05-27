@@ -8,7 +8,7 @@ import com.jammes.morselang.core.database.entity.Morse
 @Dao
 interface MorseDao {
 
-    @Query("select * from MORSE")
+    @Query("select * from morse")
     suspend fun fetchMorse(): List<Morse>
 
     @Insert

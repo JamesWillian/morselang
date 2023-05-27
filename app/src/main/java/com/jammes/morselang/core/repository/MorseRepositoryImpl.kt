@@ -3,7 +3,9 @@ package com.jammes.morselang.core.repository
 import com.jammes.morselang.MorseItem
 import com.jammes.morselang.core.MorseRepository
 import com.jammes.morselang.core.database.AppDatabase
+import com.jammes.morselang.core.database.entity.Morse
 import com.jammes.morselang.core.model.MorseDomain
+import java.util.*
 
 class MorseRepositoryImpl(appDatabase: AppDatabase): MorseRepository {
 
@@ -19,7 +21,12 @@ class MorseRepositoryImpl(appDatabase: AppDatabase): MorseRepository {
         }
     }
 
-    override suspend fun saveMorse(morse: MorseDomain) {
-        TODO("Not yet implemented")
+    override suspend fun saveMorse(text: String, morse: String) {
+        val morse = Morse(
+            uuid = UUID.randomUUID().toString(),
+            text = text,
+            morse = morse
+        )
+        dao.insert(morse)
     }
 }

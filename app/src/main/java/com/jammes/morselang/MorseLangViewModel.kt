@@ -1,29 +1,40 @@
 package com.jammes.morselang
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.jammes.morselang.core.MorseRepository
+import com.jammes.morselang.core.model.MorseDomain
+import kotlinx.coroutines.launch
 
 class MorseLangViewModel(private val repository: MorseRepository) : ViewModel() {
 
     private val uiState: MutableLiveData<UiState> by lazy {
 
-        MutableLiveData<UiState>(UiState(repository.fetchMorseList()))
+        MutableLiveData<UiState>(UiState(morseItemList = emptyList()))
+    }
+
+    private fun MorseDomain.toMorseItem() : MorseItem {
+        return MorseItem(
+            id,
+            text,
+            morse
+        )
     }
 
     fun stateOnceAndStream(): LiveData<UiState> = uiState
 
     fun saveMorse(text: String, morse: String) {
-        repository.saveMorse(text, morse)
-        refreshMorseList()
+        viewModelScope.launch {
+            repository.saveMorse(text, morse)
+            refreshMorseList()
+        }
     }
 
-    private fun refreshMorseList() {
+    private suspend fun refreshMorseList() {
         uiState.value?.let { currentUiState ->
             uiState.value = currentUiState.copy(
-                morseItemList = repository.fetchMorseList()
+                morseItemList = repository.fetchMorseList().map {morse ->
+                    morse.toMorseItem()
+                }
             )
         }
     }

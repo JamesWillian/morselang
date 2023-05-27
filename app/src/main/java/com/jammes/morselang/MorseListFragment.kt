@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jammes.morselang.core.database.AppDatabase
+import com.jammes.morselang.core.repository.MorseRepositoryImpl
 import com.jammes.morselang.databinding.FragmentMorseListBinding
 
 class MorseListFragment : Fragment() {
@@ -18,7 +20,8 @@ class MorseListFragment : Fragment() {
     private lateinit var adapter: MorseListAdapter
 
     private val viewModel: MorseLangViewModel by activityViewModels {
-        MorseLangViewModel.Factory()
+        val db = AppDatabase.getInstance(context?.applicationContext!!)
+        MorseLangViewModel.Factory(MorseRepositoryImpl(db))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
