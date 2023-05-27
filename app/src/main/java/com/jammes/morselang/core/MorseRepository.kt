@@ -1,10 +1,11 @@
 package com.jammes.morselang.core
 
 import com.jammes.morselang.MorseItem
+import com.jammes.morselang.core.model.MorseDomain
 
 interface MorseRepository {
 
-    fun fetchMorseList(): List<MorseItem>
+    suspend fun fetchMorseList(): List<MorseDomain>
 
-    fun saveMorse(text: String, morse: String)
+    suspend fun saveMorse(morse: MorseDomain)
 }

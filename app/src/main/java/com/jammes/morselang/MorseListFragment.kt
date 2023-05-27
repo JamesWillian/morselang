@@ -1,6 +1,5 @@
 package com.jammes.morselang
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jammes.morselang.core.MorseRepository
 import com.jammes.morselang.databinding.FragmentMorseListBinding
-import com.jammes.morselang.dummy.MockMorse
 
 class MorseListFragment : Fragment() {
 
@@ -21,7 +18,7 @@ class MorseListFragment : Fragment() {
     private lateinit var adapter: MorseListAdapter
 
     private val viewModel: MorseLangViewModel by activityViewModels {
-        MorseLangViewModel.Factory(MockMorse)
+        MorseLangViewModel.Factory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
