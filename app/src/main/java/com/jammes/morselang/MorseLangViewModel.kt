@@ -12,12 +12,18 @@ class MorseLangViewModel(private val repository: MorseRepository) : ViewModel() 
         MutableLiveData<UiState>(UiState(morseItemList = emptyList()))
     }
 
-    private fun MorseDomain.toMorseItem() : MorseItem {
+    private fun MorseDomain.toMorseItem(): MorseItem {
         return MorseItem(
             id,
             text,
             morse
         )
+    }
+
+    fun onResume() {
+        viewModelScope.launch {
+            refreshMorseList()
+        }
     }
 
     fun stateOnceAndStream(): LiveData<UiState> = uiState
@@ -30,20 +36,18 @@ class MorseLangViewModel(private val repository: MorseRepository) : ViewModel() 
     }
 
     private suspend fun refreshMorseList() {
-        uiState.value?.let { currentUiState ->
-            uiState.value = currentUiState.copy(
-                morseItemList = repository.fetchMorseList().map {morse ->
-                    morse.toMorseItem()
-                }
-            )
-        }
+        uiState.postValue(
+            UiState(repository.fetchMorseList().map { morse ->
+                morse.toMorseItem()
+            })
+        )
     }
 
     fun convertToMorse(userText: String): String {
 
         val codeMorse = StringBuilder()
 
-        for (key in userText){
+        for (key in userText) {
             val morseLetter = alphabetMorse[key.toString()] ?: ""
             codeMorse.append(morseLetter).append(" ")
         }
@@ -53,7 +57,7 @@ class MorseLangViewModel(private val repository: MorseRepository) : ViewModel() 
 
     data class UiState(val morseItemList: List<MorseItem>)
 
-    class Factory(private val repository: MorseRepository): ViewModelProvider.Factory {
+    class Factory(private val repository: MorseRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return MorseLangViewModel(repository) as T
         }

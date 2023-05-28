@@ -26,6 +26,7 @@ class MorseListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycle.addObserver(MorseListLifecycleObserver(viewModel))
         adapter = MorseListAdapter()
     }
 
